@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Rive Demo</title>
-  <script src="https://unpkg.com/@rive-app/webgl"></script>
+  <meta charset="UTF-8" />
+  <title>Responsive Rive via Framer</title>
+
+  <style>
+    /* 9-by-16 portrait ratio → 1280 ÷ 720 = 1.777… → 177.78 % */
+    .embed-wrapper{
+      position:relative;
+      width:100%;
+      padding-top:177.78%;
+      /* remove max-width if you really want it to stretch beyond 720 px */
+      /* max-width:720px; */
+    }
+    .embed-wrapper iframe{
+      position:absolute;
+      inset:0;          /* shorthand for top:0; right:0; bottom:0; left:0 */
+      width:100%;
+      height:100%;
+      border:0;
+    }
+  </style>
 </head>
 <body>
-  <canvas id="rive" width="720" height="1280"></canvas>
 
-  <script>
-    new rive.Rive({
-      src: "lane_catcher_2.riv",
-      canvas: document.getElementById("rive"),
-      autoplay: true
-    });
-  </script>
+  <div class="embed-wrapper">
+    <iframe
+      src="https://funny-thing-456658.framer.app/"
+      scrolling="no"
+      allowfullscreen
+    ></iframe>
+  </div>
+
 </body>
 </html>
