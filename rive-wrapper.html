@@ -1,9 +1,19 @@
-<script src="https://unpkg.com/@rive-app/webgl"></script>
-<canvas id="rive" width="500" height="400"></canvas>
-<script>
-  new rive.Rive({
-    src: "lane_catcher_2",
-    canvas: document.getElementById("rive"),
-    autoplay: true
-  });
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rive Demo</title>
+  <script src="https://unpkg.com/@rive-app/webgl"></script>
+</head>
+<body>
+  <canvas id="rive" width="720" height="1280"></canvas>
+
+  <script>
+    new rive.Rive({
+      src: "lane_catcher_2.riv",
+      canvas: document.getElementById("rive"),
+      autoplay: true
+    });
+  </script>
+</body>
+</html>
