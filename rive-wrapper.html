@@ -2,27 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Responsive Rive demo</title>
+  <title>Responsive Rive – lane_catcher_2</title>
 
   <style>
-    /* 9 × 16 portrait wrapper */
+    /* 9 × 16 portrait wrapper (720 × 1280) */
     .embed-wrapper{
       position:relative;
       width:100%;
-      padding-top:177.78%;   /* 1280 ÷ 720 */
-      max-width:720px;       /* optional cap */
+      padding-top:177.78%;
+      max-width:720px;
       margin:0 auto;
     }
     .embed-wrapper canvas{
       position:absolute;
       inset:0;
-      width:100%;  
+      width:100%;
       height:100%;
       border:0;
     }
   </style>
 
-  <script src="https://unpkg.com/@rive-app/canvas@2.7.1"></script>
+  <!-- Rive 2 runtime (canvas renderer) -->
+  <script src="https://unpkg.com/@rive-app/canvas@2"></script>
 </head>
 <body>
 
@@ -31,12 +32,47 @@
   </div>
 
   <script>
-    new rive.Rive({
-      src: "./lane_catcher_2.riv",      // keep .riv in the same folder
+    const riveGame = new rive.Rive({
+      src: "./lane_catcher_2.riv",
       canvas: document.getElementById("rive"),
+      stateMachines: "State Machine 1",
       autoplay: true,
-      /* stateMachines: "Main",         // add if you have one
-         onLoad: () => { … }           // set inputs if needed   */
+
+      onLoad: () => {
+        /* build a quick lookup table of inputs -------------------------- */
+        const inputs = {};
+        riveGame.stateMachineInputs("State Machine 1")
+                .forEach(i => inputs[i.name] = i);
+
+        /* helper wrappers (nicer to read) ------------------------------- */
+        const setBool = (name, v) => inputs[name] && (inputs[name].value = !!v);
+        const setNum  = (name, n) => inputs[name] && (inputs[name].value = +n);
+        const trig    = name      => inputs[name]?.fire?.();
+
+        /* 1 - initial state -------------------------------------------- */
+        setBool("restart game bool",     false);
+        setBool("start game",            false);
+        setBool("lanes active",          true);
+        setBool("balls active",          true);
+        setBool("balls active level 2",  false);
+        setBool("balls active level 3",  false);
+        setBool("miss bool",             false);
+        setBool("lane 1 on-off",         true);
+        setBool("lane 2 on-off",         true);
+        setBool("lane 3 on-off",         true);
+        setBool("difficulty level up 1 bool", false);
+        setBool("difficulty level up 2 bool", false);
+        setNum ("baskets",               0);
+
+        /* 2 - simple keyboard demo ------------------------------------- */
+        window.addEventListener("keydown", e => {
+          if (e.code === "Space") {
+            trig   ("game reset trig");
+            setBool("restart game bool", true);
+            setTimeout(() => setBool("restart game bool", false), 100); // momentary
+          }
+        });
+      }
     });
   </script>
 
