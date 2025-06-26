@@ -26,6 +26,19 @@
 
   <!-- Rive 2 runtime (canvas renderer) -->
   <script src="https://unpkg.com/@rive-app/canvas@2"></script>
+  <!-- tell Iframely (and others) this page itself is a video-style player -->
+<link  rel="player"
+       href="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html"
+       type="text/html"
+       width="720" height="1280">
+
+<!-- Open Graph fallback -->
+<meta property="og:type"         content="video.other">
+<meta property="og:video"        content="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html">
+<meta property="og:video:type"   content="text/html">
+<meta property="og:video:width"  content="720">
+<meta property="og:video:height" content="1280">
+
 </head>
 <body>
 
