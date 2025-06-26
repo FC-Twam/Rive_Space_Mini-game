@@ -72,19 +72,19 @@
         const trig    = name      => inputs[name]?.fire?.();
 
         /* 1 - initial state -------------------------------------------- */
-        setBool("restart game bool",     false);
+        setBool("restart game bool",     true);
         setBool("start game",            false);
-        setBool("lanes active",          true);
-        setBool("balls active",          true);
-        setBool("balls active level 2",  false);
-        setBool("balls active level 3",  false);
-        setBool("miss bool",             false);
+        setBool("lanes active",          false);
+        setBool("balls active",          false);
+        setBool("balls active level 2",  true);
+        setBool("balls active level 3",  true);
+        setBool("miss bool",             true);
         setBool("lane 1 on-off",         true);
         setBool("lane 2 on-off",         true);
         setBool("lane 3 on-off",         true);
         setBool("difficulty level up 1 bool", false);
         setBool("difficulty level up 2 bool", false);
-        setNum ("baskets",               0);
+        setNum ("baskets",               2);
 
         /* 2 - simple keyboard demo ------------------------------------- */
         window.addEventListener("keydown", e => {
