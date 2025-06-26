@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Responsive Rive – lane_catcher_2</title>
+  <title>Rive demo – portrait 9 × 16</title>
 
   <style>
-    /* 9 × 16 portrait wrapper (720 × 1280) */
+    /* ❶ centre the wrapper and keep it inside the viewport */
     .embed-wrapper{
-      position:relative;
-      width:100%;
-      padding-top:177.78%;
-      max-width:720px;
-      margin:0 auto;
+      aspect-ratio: 9 / 16;      /* 720 × 1280 portrait               */
+      width:  min(720px, 100%);  /* don’t grow wider than the design  */
+      height: min(1280px, 90vh); /* and never exceed the viewport     */
+      margin: 0 auto;
+      position: relative;
     }
+
+    /* ❷ make the canvas fill the wrapper exactly – no distortion */
     .embed-wrapper canvas{
       position:absolute;
       inset:0;
