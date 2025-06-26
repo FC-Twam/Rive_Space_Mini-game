@@ -34,6 +34,26 @@
   </div>
 
   <script>
+  const canvas = document.getElementById("rive");
+
+  /* match bitmap size to the CSS box — and to devicePixelRatio */
+  function resizeCanvas () {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = canvas.clientWidth  * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+  }
+  resizeCanvas();            // once at start
+  window.addEventListener("resize", resizeCanvas);
+
+  new rive.Rive({
+    src: "./lane_catcher_2.riv",
+    canvas,
+    stateMachines: "State Machine 1",
+    autoplay: true
+  });
+</script>
+
+  <script>
     const riveGame = new rive.Rive({
       src: "./lane_catcher_2.riv",
       canvas: document.getElementById("rive"),
