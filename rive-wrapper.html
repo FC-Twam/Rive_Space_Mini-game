@@ -5,117 +5,69 @@
   <title>Rive demo – portrait 9 × 16</title>
 
   <style>
-    /* ❶ centre the wrapper and keep it inside the viewport */
     .embed-wrapper{
-      aspect-ratio: 9 / 16;      /* 720 × 1280 portrait               */
-      width:  min(720px, 100%);  /* don’t grow wider than the design  */
-      height: min(1280px, 90vh); /* and never exceed the viewport     */
-      margin: 0 auto;
-      position: relative;
+      aspect-ratio: 9 / 16;
+      width: min(720px, 100%);
+      height: min(1280px, 90vh);
+      margin:0 auto; position:relative;
     }
-
-    /* ❷ make the canvas fill the wrapper exactly – no distortion */
-    .embed-wrapper canvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      border:0;
-    }
+    .embed-wrapper canvas{position:absolute;inset:0;width:100%;height:100%;border:0;}
   </style>
 
-  <!-- Rive 2 runtime (canvas renderer) -->
   <script src="https://unpkg.com/@rive-app/canvas@2"></script>
- 
-  <!-- 1️⃣  explicit “player” – Iframely’s preferred hint -->
-<link rel="player"
-      href="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html"
-      type="text/html" width="720" height="1280">
 
-<!-- 2️⃣  oEmbed discovery – Iframely & many CMSes look for this -->
-<link rel="alternate"
-      type="application/json+oembed"
-      href="https://fc-twam.github.io/Rive_Space_Mini-game/oembed.json"
-      title="Rive mini-game">
+  <!-- Iframely / oEmbed / Open-Graph -->
+  <link rel="player" href="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html"
+        type="text/html" width="720" height="1280">
+  <link rel="alternate" type="application/json+oembed"
+        href="https://fc-twam.github.io/Rive_Space_Mini-game/oembed.json" title="Rive mini-game">
 
-<!-- 3️⃣  Open-Graph video fallback (Slack, Discord, etc.) -->
-<meta property="og:type"         content="video.other">
-<meta property="og:video"        content="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html">
-<meta property="og:video:type"   content="text/html">
-<meta property="og:video:width"  content="720">
-<meta property="og:video:height" content="1280">
+  <meta property="og:type"  content="video.other">
+  <meta property="og:video" content="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html">
+  <meta property="og:video:type"   content="text/html">
+  <meta property="og:video:width"  content="720">
+  <meta property="og:video:height" content="1280">
 
+  <!-- Twitter Player Card -->
+  <meta name="twitter:card"  content="player">
+  <meta name="twitter:title" content="Rive demo – portrait 9 × 16">
+  <meta name="twitter:player"        content="https://fc-twam.github.io/Rive_Space_Mini-game/rive-wrapper.html">
+  <meta name="twitter:player:width"  content="720">
+  <meta name="twitter:player:height" content="1280">
 </head>
 <body>
-
-  <div class="embed-wrapper">
-    <canvas id="rive"></canvas>
-  </div>
+  <div class="embed-wrapper"><canvas id="rive"></canvas></div>
 
   <script>
-  const canvas = document.getElementById("rive");
+    /* crisp canvas */
+    const canvas = document.getElementById("rive");
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width  = canvas.clientWidth  * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+    };
+    resize(); window.addEventListener("resize", resize);
 
-  /* match bitmap size to the CSS box — and to devicePixelRatio */
-  function resizeCanvas () {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width  = canvas.clientWidth  * dpr;
-    canvas.height = canvas.clientHeight * dpr;
-  }
-  resizeCanvas();            // once at start
-  window.addEventListener("resize", resizeCanvas);
-
-  new rive.Rive({
-    src: "./lane_catcher_2.riv",
-    canvas,
-    stateMachines: "State Machine 1",
-    autoplay: true
-  });
-</script>
-
-  <script>
-    const riveGame = new rive.Rive({
+    /* one player instance */
+    const game = new rive.Rive({
       src: "./lane_catcher_2.riv",
-      canvas: document.getElementById("rive"),
+      canvas,
       stateMachines: "State Machine 1",
       autoplay: true,
-
       onLoad: () => {
-        /* build a quick lookup table of inputs -------------------------- */
-        const inputs = {};
-        riveGame.stateMachineInputs("State Machine 1")
-                .forEach(i => inputs[i.name] = i);
-
-        /* helper wrappers (nicer to read) ------------------------------- */
-        const setBool = (name, v) => inputs[name] && (inputs[name].value = !!v);
-        const setNum  = (name, n) => inputs[name] && (inputs[name].value = +n);
-        const trig    = name      => inputs[name]?.fire?.();
-
-        /* 1 - initial state -------------------------------------------- */
-        setBool("restart game bool",     true);
-        setBool("start game",            false);
-        setBool("lanes active",          false);
-        setBool("balls active",          false);
-        setBool("balls active level 2",  true);
-        setBool("balls active level 3",  true);
-        setBool("miss bool",             true);
-        setBool("lane 1 on-off",         true);
-        setBool("lane 2 on-off",         true);
-        setBool("lane 3 on-off",         true);
-        setBool("difficulty level up 1 bool", false);
-        setBool("difficulty level up 2 bool", false);
-        setNum ("baskets",               2);
-
-        /* 2 - simple keyboard demo ------------------------------------- */
-        window.addEventListener("keydown", e => {
-          if (e.code === "Space") {
-            trig   ("game reset trig");
-            setBool("restart game bool", true);
-            setTimeout(() => setBool("restart game bool", false), 100); // momentary
-          }
+        const map={}; game.stateMachineInputs("State Machine 1").forEach(i=>map[i.name]=i);
+        const B=(n,v)=>map[n]&&(map[n].value=!!v), N=(n,v)=>map[n]&&(map[n].value=+v), T=n=>map[n]?.fire();
+        /* initial values */
+        B("restart game bool",true); B("lanes active",false); B("balls active",false);
+        B("balls active level 2",true); B("balls active level 3",true);
+        B("miss bool",true); N("baskets",2);
+        /* demo key */
+        window.addEventListener("keydown",e=>{
+          if(e.code==="Space"){ T("game reset trig"); B("restart game bool",true);
+            setTimeout(()=>B("restart game bool",false),100); }
         });
       }
     });
   </script>
-
 </body>
 </html>
